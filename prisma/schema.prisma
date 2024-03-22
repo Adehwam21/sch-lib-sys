@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id              String     @id @default(uuid())
+  title           String     @unique
+  authorFirstName String?
+  authorLastName  String?
+  author          Author     @relation(fields: [authorId], references: [id])
+  authorId        String
+  copies          BookCopy[]
+
+  @@index([title])
+}
+
+model BookCopy {
+  copyId       String    @id @default(uuid())
+  copyCode     Int       @unique
+  book         Book      @relation(fields: [bookId], references: [id])
+  bookId       String
+  ISBN         String?
+  pages        Int?
+  borrowedBy   User?     @relation(fields: [borrowedById], references: [id])
+  borrowedById String?
+  borrowedAt   DateTime?
+  returnedAt   DateTime?
+  userId       String?
+
+  @@index([bookId])
+}
+
+model Author {
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String @unique
+  books     Book[]
+
+  @@index([email])
+}
+
+model User {
+  id             String     @id @default(uuid())
+  firstName      String
+  lastName       String
+  age            Int
+  username       String     @unique
+  hashedPassword String
+  email          String     @unique
+  role           Role       @default(STUDENT)
+  phone          String?
+  BookCopies     BookCopy[]
+
+  @@index([email])
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+  SUPER_ADMIN
+}
