@@ -1,9 +1,15 @@
 import express from 'express';
 const router = express.Router();
 
-import {addAuthor, editAuthor} from '../controllers/authorControllers';
+import {addAuthor, delAuthor, getAllAuthors, getAuthorByEmail, getAuthorByFirstName, getAuthorById, getAuthorByLastName, updateAuthor} from '../controllers/authorControllers';
 
-router.post('/add-author', addAuthor);
-router.put('/edit-author/:id', editAuthor)
+router.post('/author', addAuthor);
+router.get('/author/:id', getAuthorById);
+router.get('/authors', getAllAuthors);
+router.get('/author/?email;', getAuthorByEmail);
+router.get('/author/?fname;', getAuthorByFirstName);
+router.get('/author/?lname;', getAuthorByLastName);
+router.put('/update-author/:id', updateAuthor);
+router.delete('/author/:id', delAuthor);
 
 module.exports = router
