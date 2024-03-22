@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { UpdateUser } from 'dto/userRelatedDto';
 import {prisma} from '../db/prismas';
 import {Request, Response} from 'express'
 
@@ -79,7 +79,7 @@ export const getUserByRole = async (req: Request, res: Response) => {
     
     try {
         const user = await prisma.user.findMany({
-            where: { role: role as Role  },
+            where: { role: role},
         });
 
         if (!user) {
@@ -97,12 +97,12 @@ export const getUserByRole = async (req: Request, res: Response) => {
 /*=========================== Update User info ======================================*/
 export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { firstName, lastName, age, phone } = req.body;
+    const { firstName, lastName, age, phone }: UpdateUser = req.body;
 
     try {
         // Fetch author information from the database
         const newUser = await prisma.user.findUnique({
-            where: { id: String(id) }
+            where: { id: id }
         });
 
         if (!newUser) {
