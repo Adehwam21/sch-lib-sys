@@ -1,9 +1,10 @@
 import { prisma } from "../db/prismas";
 import { Request, Response } from "express";
+import { CreateBook, CreateBookCopy } from "dto/bookRelatedDto";
 
 /*================================== Create single book ===========================================*/
 export const addBook = async (req: Request, res: Response) => {
-    const {title, authorId, authorFirstName,authorLastName} = req.body
+    const {title, authorId, authorFirstName,authorLastName} :CreateBook = req.body
     try {
         // Fetch predefined book and author info from database
         const book = await prisma.book.findUnique({
@@ -28,10 +29,10 @@ export const addBook = async (req: Request, res: Response) => {
         } else {
             const createBook = await prisma.book.create({
                 data: {
-                    title: String(title),
-                    authorFirstName: String(authorFirstName),
-                    authorLastName: String(authorLastName),
-                    authorId: String(authorId),
+                    title: title,
+                    authorFirstName: authorFirstName,
+                    authorLastName: authorLastName,
+                    authorId: authorId,
                 }
             })
             console.log(`${createBook?.title} added to Books`)
@@ -45,14 +46,14 @@ export const addBook = async (req: Request, res: Response) => {
 
 /*================================== Create single copy of book ===========================================*/
 export const addBookCopy = async (req: Request, res: Response) => {
-    const {bookId,copyCode, ISBN, pages} = req.body
+    const {bookId,copyCode, ISBN, pages}: CreateBookCopy = req.body
     try {
         // Fetch predefined book and book copy info from database
         const book = await prisma.book.findUnique({
-            where : {id: String(bookId)}
+            where : {id: bookId}
         })
         const bookCopy = await prisma.bookCopy.findUnique({
-            where : {copyCode: Number(copyCode)}
+            where : {copyCode: copyCode}
         })
 
         // Verify if book exists in the database
@@ -68,10 +69,10 @@ export const addBookCopy = async (req: Request, res: Response) => {
         } else {
             const createBookCopy = await prisma.bookCopy.create({
                 data: {
-                    copyCode: Number(copyCode),
-                    bookId: String(book?.id),
-                    ISBN: String(ISBN),
-                    pages: Number(pages) 
+                    copyCode: copyCode,
+                    bookId: book?.id,
+                    ISBN: ISBN,
+                    pages: pages 
                 }
             })
             console.log(`${createBookCopy?.copyCode} added to Books`)

@@ -101,11 +101,11 @@ export const updateUser = async (req: Request, res: Response) => {
 
     try {
         // Fetch author information from the database
-        const newUser = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: id }
         });
 
-        if (!newUser) {
+        if (!user) {
             console.log("User does not exist");
             return res.status(404).json({ message: "User not found" });
         }
@@ -114,9 +114,10 @@ export const updateUser = async (req: Request, res: Response) => {
         await prisma.user.update({
             where: { id: String(id) },
             data: {
-                firstName: firstName || newUser?.firstName,
-                lastName: lastName || newUser?.lastName,
-                phone: phone || newUser?.email
+                firstName: firstName || user?.firstName,
+                lastName: lastName || user?.lastName,
+                age: age || user?.age,
+                phone: phone || user?.email
             }
         });
 

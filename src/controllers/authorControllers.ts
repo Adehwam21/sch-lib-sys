@@ -1,12 +1,13 @@
+import { CreateAuthor } from "dto/authorRelatedDto";
 import { prisma } from "../db/prismas";
 import { Request, Response } from "express";
 
 /*=========================== Add Author ===========================================*/
 export const addAuthor = async (req: Request, res: Response) => {
-    const {firstName, lastName, email} = req.body
+    const {firstName, lastName, email}:CreateAuthor = req.body
     try {
         const author = await prisma.author.findUnique({
-            where : {email: String(email)}
+            where : {email: email}
         })
         if (author?.email === email){
             console.log('Author already exists')
@@ -14,9 +15,9 @@ export const addAuthor = async (req: Request, res: Response) => {
         } else {
             const createAuthor = await prisma.author.create({
                 data: {
-                    firstName: String(firstName),
-                    lastName: String(lastName),
-                    email: String(email)
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email
                 }
             })
             console.log(`${createAuthor?.firstName} ${createAuthor?.lastName} added to Authors`)
@@ -58,7 +59,7 @@ export const getAuthorById = async (req: Request, res: Response): Promise<Respon
 
 /*=========================== Find Author by email ===========================================*/
 export const getAuthorByEmail = async (req: Request, res: Response): Promise<Response> => {
-    const { email } = req.params;
+    const email = req.query.email;
     try {
         const author = await prisma.author.findFirst({
             where: { email: email }
@@ -75,10 +76,10 @@ export const getAuthorByEmail = async (req: Request, res: Response): Promise<Res
 
 /*=========================== Find Author by First Name ===========================================*/
 export const getAuthorByFirstName = async (req: Request, res: Response): Promise<Response> => {
-    const { firstName } = req.params;
+    const fname = req.query.fname;
     try {
         const authors = await prisma.author.findMany({
-            where: { firstName: firstName }
+            where: { firstName: fname }
         });
         if (authors.length === 0) {
             return res.status(404).json({ message: "Authors not found" });
@@ -92,10 +93,10 @@ export const getAuthorByFirstName = async (req: Request, res: Response): Promise
 
 /*=========================== Find Author by Last Name ===========================================*/
 export const getAuthorByLastName = async (req: Request, res: Response): Promise<Response> => {
-    const { lastName } = req.params;
+    const lname = req.query.lname;
     try {
         const authors = await prisma.author.findMany({
-            where: { lastName: lastName }
+            where: { lastName: lname }
         });
         if (authors.length === 0) {
             return res.status(404).json({ message: "Authors not found" });
@@ -107,8 +108,7 @@ export const getAuthorByLastName = async (req: Request, res: Response): Promise<
     }
 };
 
-
-/*================================== Edit Author Details ===========================================*/
+/*================================== Update Author Details ===========================================*/
 export const updateAuthor = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { firstName, lastName, email } = req.body;
@@ -116,7 +116,7 @@ export const updateAuthor = async (req: Request, res: Response) => {
     try {
         // Fetch author information from the database
         const author = await prisma.author.findUnique({
-            where: { id: String(id) }
+            where: {id: id}
         });
 
         if (!author) {
@@ -126,11 +126,11 @@ export const updateAuthor = async (req: Request, res: Response) => {
 
         // Update author details with request body and save.
         await prisma.author.update({
-            where: { id: String(id) },
+            where: {id: id},
             data: {
-                firstName: firstName || author.firstName,
-                lastName: lastName || author.lastName,
-                email: email || author.email
+                firstName: firstName,
+                lastName: lastName,
+                email: email
             }
         });
 
@@ -144,3 +144,16 @@ export const updateAuthor = async (req: Request, res: Response) => {
     }
 };
 
+/*================================== Delete Author ===========================================*/
+export const delAuthor = async (req: Request, res: Response): Promise<Response> => {
+    const {id} = req.params
+    try {
+        await prisma.author.delete({
+            where : {id : id}
+        });
+        return res.status(200).json({ message: "Account deleted" });
+    } catch (error) {
+        console.error("Error deleting account:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
