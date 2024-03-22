@@ -1,14 +1,15 @@
 import {prisma} from '../db/prismas';
 import {Request, Response} from 'express'
 import {hashPassword, comparePassword} from '../utils/authenticate';
+import { Register, Login } from 'dto/authDto';
 
 /* ========================================User registration======================================== */
 export const register = async (req: Request, res: Response) => {
-    const { firstName, lastName, age, username, password, email, phone } = req.body;
+    const { firstName, lastName, age, username, password, email, phone }: Register = req.body;
     try {
         // Verify if user already exists in the database
         const user = await prisma.user.findUnique({
-            where: {email: String(email)}
+            where: {email: email}
         });
         if (user?.email && user?.username) {
             console.log("User already exists")
@@ -19,13 +20,13 @@ export const register = async (req: Request, res: Response) => {
             const hash = await hashPassword(String(password));
             const createUser = await prisma.user.create({
             data: {
-                firstName: String(firstName),
-                lastName: String(lastName),
-                username: String(username),
-                age: Number(age),
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                age: age,
                 hashedPassword: hash,
-                email: String(email),
-                phone: String(phone)
+                email: email,
+                phone: phone
             }
         });
         console.log(`${createUser?.username} registered`);
@@ -39,20 +40,20 @@ export const register = async (req: Request, res: Response) => {
 
 /* ========================================User login============================================== */
 export const login = async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { username, password }:Login = req.body;
     try {
         // Check if user exists and is unique
         const user = await prisma.user.findUnique({
-            where: { username: String(username) }
+            where: { username: username }
         });
         if (username !== user?.username) {
             return res.status(401).send("Invalid username");
         }
 
         // Check if passwords match
-        const match = await comparePassword(password, String(user?.hashedPassword));
+        const match = await comparePassword(password, user?.hashedPassword);
         if (match) {
-            console.log(`${String(user?.username)} logged in }`)
+            console.log(`${user?.username} logged in }`)
             return res.status(200).send("Login successful");
         } else {
             console.log("Invalid password")
