@@ -1,11 +1,9 @@
-import {prisma} from '../db/prismas';
 import {Request, Response} from 'express'
-import {hashPassword, comparePassword} from '../utils/authenticate';
 import { Register, Login } from 'dto/authDto';
 import { loginService, resgistrationService } from 'services/dbServices/authServices';
 
 /* ========================================User registration======================================== */
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) :Promise<Response>=> {
     const { firstName, lastName, age, username, password, email, phone }: Register = req.body;
     try {
         const info = await resgistrationService(firstName, lastName, age, username, password, email, phone)
@@ -17,7 +15,7 @@ export const register = async (req: Request, res: Response) => {
 };
 
 /* ========================================User login============================================== */
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) :Promise<Response>=> {
     const { username, password }:Login = req.body;
     try {
         const info = await loginService(username, password)

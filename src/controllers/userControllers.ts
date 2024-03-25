@@ -1,7 +1,13 @@
 import { UpdateUser } from 'dto/userRelatedDto';
-import {prisma} from '../db/prismas';
 import {Request, Response} from 'express'
-import { getAllUsersService, getUserByIdService, getUserByUsernameService, getUserByMailService, getUserByRoleService, updateUserService } from '../services/dbServices/userServices';
+import { 
+    getAllUsersService, 
+    getUserByIdService, 
+    getUserByUsernameService, 
+    getUserByMailService, 
+    getUserByRoleService, 
+    updateUserService 
+} from '../services/dbServices/userServices';
 
 /*=========================== Get all Users ======================================*/
 export const getAllUsers = async (req: Request, res: Response) => {

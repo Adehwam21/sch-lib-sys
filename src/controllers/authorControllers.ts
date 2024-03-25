@@ -16,7 +16,7 @@ export const addAuthor = async (req: Request, res: Response) => {
 };
 
 /*=========================== Get all Authors ===========================================*/
-export const getAllAuthors = async (req: Request, res: Response) => {
+export const getAllAuthors = async (req: Request, res: Response) :Promise<Response> => {
     try {
         const { code, data } = await getAllAuthorsService();
         return res.status(code).json(data);
@@ -27,7 +27,7 @@ export const getAllAuthors = async (req: Request, res: Response) => {
 };
 
 /*=========================== Find Author by Author ID ===========================================*/
-export const getAuthorById = async (req: Request, res: Response) => {
+export const getAuthorById = async (req: Request, res: Response) :Promise<Response> => {
     const { id } = req.params;
     try {
         const { code, data } = await getAuthorByIdService(id);
@@ -39,7 +39,7 @@ export const getAuthorById = async (req: Request, res: Response) => {
 };
 
 /*=========================== Find Author by email ===========================================*/
-export const getAuthorByEmail = async (req: Request, res: Response) => {
+export const getAuthorByEmail = async (req: Request, res: Response) :Promise<Response> => {
     const { email } = req.query;
     try {
         const { code, data } = await getAuthorByEmailService(email as string);
@@ -51,7 +51,7 @@ export const getAuthorByEmail = async (req: Request, res: Response) => {
 };
 
 /*=========================== Find Author by First Name ===========================================*/
-export const getAuthorByFirstName = async (req: Request, res: Response) => {
+export const getAuthorByFirstName = async (req: Request, res: Response) :Promise<Response> => {
     const { fname } = req.query;
     try {
         const { code, data } = await getAuthorByFirstNameService(fname as string);
@@ -63,7 +63,7 @@ export const getAuthorByFirstName = async (req: Request, res: Response) => {
 };
 
 /*=========================== Find Author by Last Name ===========================================*/
-export const getAuthorByLastName = async (req: Request, res: Response) => {
+export const getAuthorByLastName = async (req: Request, res: Response) :Promise<Response> => {
     const { lname } = req.query;
     try {
         const { code, data } = await getAuthorByLastNameService(lname as string);
@@ -75,7 +75,7 @@ export const getAuthorByLastName = async (req: Request, res: Response) => {
 };
 
 /*================================== Update Author Details ===========================================*/
-export const updateAuthor = async (req: Request, res: Response) => {
+export const updateAuthor = async (req: Request, res: Response) :Promise<Response> => {
     const { id } = req.params;
     const { firstName, lastName, email } = req.body;
     try {
@@ -88,7 +88,7 @@ export const updateAuthor = async (req: Request, res: Response) => {
 };
 
 /*================================== Delete Author ===========================================*/
-export const delAuthor = async (req: Request, res: Response) => {
+export const delAuthor = async (req: Request, res: Response) :Promise<Response> => {
     const { id } = req.params;
     try {
         const {code, data} = await deleteAuthorService(id);
