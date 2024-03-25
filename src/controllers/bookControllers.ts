@@ -44,6 +44,86 @@ export const addBook = async (req: Request, res: Response) => {
     }
 }
 
+
+/*=========================== Get all Books ===========================================*/
+export const getAllBooks = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const books = await prisma.book.findMany();
+        return res.status(200).json({ books });
+    } catch (error) {
+        console.error("Error fetching all authors:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+/*=========================== Find Book by ID ===========================================*/
+export const getBookById = async (req: Request, res: Response): Promise<Response> => {
+    const { id } = req.params;
+    try {
+        const book = await prisma.book.findUnique({
+            where: { id: id }
+        });
+        if (!book) {
+            return res.status(404).json({ message: "Author not found" });
+        }
+        return res.status(200).json({ book });
+    } catch (error) {
+        console.error("Error fetching author by id:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+/*=========================== Find Book by Title ===========================================*/
+export const getBookByTitle = async (req: Request, res: Response): Promise<Response> => {
+    const { title } = req.params;
+    try {
+        const book = await prisma.book.findUnique({
+            where: { title: title }
+        });
+        if (!book) {
+            return res.status(404).json({ message: "Author not found" });
+        }
+        return res.status(200).json({ book });
+    } catch (error) {
+        console.error("Error fetching author by id:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+/*=========================== Delete Book ===========================================*/
+export const deleteBook = async (req: Request, res: Response): Promise<Response> => {
+    const {id} = req.params;
+    try {
+        const book = await prisma.book.delete({
+            where: { id: id }
+        });
+        if (!book) {
+            return res.status(404).json({ message: "Book does not exist" });
+        }
+        return res.status(200).json({ message: "Book deleted successfully"});
+    } catch (error) {
+        console.error("Error fetching author by id:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+/*
+| Title                                             | Author's First Name | Author's Last Name | Author's Email | Number of Pages | ISBN          |
+|---------------------------------------------------|----------------------|--------------------|----------------|-----------------|---------------|
+| To Kill a Mockingbird                             | Harper               | Lee                | n/a            | 336             | 978-0061120084|
+| 1984                                              | George               | Orwell             | n/a            | 328             | 978-0451524935|
+| The Great Gatsby                                  | Francis Scott        | Fitzgerald         | n/a            | 180             | 978-0743273565|
+| Harry Potter and the Sorcerer's Stone             | Joanne               | Rowling            | n/a            | 320             | 978-0590353427|
+| Pride and Prejudice                               | Jane                 | Austen             | n/a            | 416             | 978-0141439518|
+| The Catcher in the Rye                            | Jerome David         | Salinger           | n/a            | 224             | 978-0316769488|
+| The Lord of the Rings: The Fellowship of the Ring | John                 | Tolkien            | n/a            | 432             | 978-0618346257|
+| The Hobbit                                        | John                 | Tolkien            | n/a            | 320             | 978-0547928227|
+| The Da Vinci Code                                 | Dan                  | Brown              | n/a            | 624             | 978-0307474278|
+
+*/
+
+// Book Copy functionalties
+
 /*================================== Create single copy of book ===========================================*/
 export const addBookCopy = async (req: Request, res: Response) => {
     const {bookId,copyCode, ISBN, pages}: CreateBookCopy = req.body
@@ -84,17 +164,47 @@ export const addBookCopy = async (req: Request, res: Response) => {
     }
 }
 
-/*
-| Title                                             | Author's First Name | Author's Last Name | Author's Email | Number of Pages | ISBN          |
-|---------------------------------------------------|----------------------|--------------------|----------------|-----------------|---------------|
-| To Kill a Mockingbird                             | Harper               | Lee                | n/a            | 336             | 978-0061120084|
-| 1984                                              | George               | Orwell             | n/a            | 328             | 978-0451524935|
-| The Great Gatsby                                  | Francis Scott        | Fitzgerald         | n/a            | 180             | 978-0743273565|
-| Harry Potter and the Sorcerer's Stone             | Joanne               | Rowling            | n/a            | 320             | 978-0590353427|
-| Pride and Prejudice                               | Jane                 | Austen             | n/a            | 416             | 978-0141439518|
-| The Catcher in the Rye                            | Jerome David         | Salinger           | n/a            | 224             | 978-0316769488|
-| The Lord of the Rings: The Fellowship of the Ring | John                 | Tolkien            | n/a            | 432             | 978-0618346257|
-| The Hobbit                                        | John                 | Tolkien            | n/a            | 320             | 978-0547928227|
-| The Da Vinci Code                                 | Dan                  | Brown              | n/a            | 624             | 978-0307474278|
+/*=========================== Get all Books Copies ===========================================*/
+export const getAllBookCopies = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const books = await prisma.bookcopy.findMany();
+        return res.status(200).json({ books });
+    } catch (error) {
+        console.error("Error fetching all authors:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
 
-*/
+/*=========================== Find Book by Code ===========================================*/
+export const getBookCopyByCode = async (req: Request, res: Response): Promise<Response> => {
+    const { copyCode } = req.params;
+    try {
+        const bookCopy = await prisma.book.findUnique({
+            where: { copyCode: copyCode}
+        });
+        if (!bookCopy) {
+            return res.status(404).json({ message: "Author not found" });
+        }
+        return res.status(200).json({ bookCopy });
+    } catch (error) {
+        console.error("Error fetching author by id:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+/*=========================== Delete Book ===========================================*/
+export const deleteBookCopy = async (req: Request, res: Response): Promise<Response> => {
+    const {copyCode} = req.params;
+    try {
+        const book = await prisma.bookcopy.delete({
+            where: { copyCode: copyCode }
+        });
+        if (!book) {
+            return res.status(404).json({ message: "Book Copy does not exist" });
+        }
+        return res.status(200).json({ message: "Book Copy deleted successfully"});
+    } catch (error) {
+        console.error("Error fetching author by id:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
