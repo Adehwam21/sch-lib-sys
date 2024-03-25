@@ -10,6 +10,6 @@ router.get('/author/?email;', getAuthorByEmail);
 router.get('/author/?fname;', getAuthorByFirstName);
 router.get('/author/?lname;', getAuthorByLastName);
 router.put('/update-author/:id', updateAuthor);
-router.delete('/author/:id', delAuthor);
+router.delete('/author/:id', delAuthor)
 
 module.exports = router
