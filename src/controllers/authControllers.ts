@@ -2,7 +2,7 @@ import {prisma} from '../db/prismas';
 import {Request, Response} from 'express'
 import {hashPassword, comparePassword} from '../utils/authenticate';
 import { Register, Login } from 'dto/authDto';
-import { loginService, resgistrationService } from 'services/dbServices';
+import { loginService, resgistrationService } from 'services/dbServices/authServices';
 
 /* ========================================User registration======================================== */
 export const register = async (req: Request, res: Response) => {
