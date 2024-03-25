@@ -1,9 +1,15 @@
 import express from 'express';
 const router = express.Router();
 
-import {addBook, addBookCopy} from '../controllers/bookControllers';
+import {addBook, addBookCopy, getAllBookCopies, getAllBooks, getBookCopyByCode} from '../controllers/bookControllers';
 
-router.post('/add-book', addBook);
-router.post('/add-book-copy', addBookCopy )
+// Books routes
+router.post('/book-copy', addBook );
+router.get('/books', getAllBooks);
 
-module.exports = router
+// Book Copy routes
+router.post('/book-copy', addBookCopy );
+router.get('/books', getAllBookCopies);
+router.get('/book-copy:code', getBookCopyByCode);
+
+module.exports = router;
