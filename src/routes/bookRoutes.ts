@@ -13,7 +13,7 @@ import {
 } from '../controllers/bookControllers';
 
 // Books routes
-router.post('/book-copy', addBook );
+router.post('/book', addBook );
 router.get('/books', getAllBooks);
 router.get('/books/?title', getBookByTitle);
 router.delete('/books/:id', deleteBook);
