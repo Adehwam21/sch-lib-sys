@@ -1,11 +1,11 @@
 import { prisma } from "../../db/prismas";
-import { converStringToRoleType } from 'utils/userUtils';
+import { converStringToRoleType } from '../../utils/userUtils';
 
 // GET ALL USERS 
 export const getAllUsersService = async () => {
     try {
         const users = await prisma.user.findMany();
-        return { code: 200, data: users };
+        return { code: 200, data: {users} };
     } catch (error) {
         console.error("Error fetching all users:", error);
         return { code: 500, data: "Internal server error" };
@@ -14,7 +14,7 @@ export const getAllUsersService = async () => {
 // GET USER BY ID
 export const getUserByIdService = async (userId: string) => {
     try {
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: { id: userId },
         });
 
@@ -41,7 +41,7 @@ export const getUserByUsernameService = async (username: string) => {
             console.log("User not found");
             return { code: 404, data: "User not found" };
         }
-
+        console.log(user)
         return { code: 200, data: user };
     } catch (error) {
         console.error("Error fetching user details:", error);
@@ -50,7 +50,7 @@ export const getUserByUsernameService = async (username: string) => {
 };
 
 // GET USER BY MAIL
-export const getUserByMailService = async (email: string) => {
+export const getUserByMailService = async (email: any) => {
     try {
         const user = await prisma.user.findUnique({
             where: { email: email },
@@ -73,14 +73,13 @@ export const getUserByRoleService = async (role: any) => {
     try {
         const userRole = converStringToRoleType(role)
         const users = await prisma.user.findMany({
-            where: { role: role },
+            where: { role: userRole },
         });
 
         if (!users || users.length === 0) {
             console.log("Users not found");
             return { code: 404, data: "Users not found" };
         }
-
         return { code: 200, data: users };
     } catch (error) {
         console.error("Error fetching users by role:", error);
@@ -89,10 +88,10 @@ export const getUserByRoleService = async (role: any) => {
 };
 
 // UPDATE USER
-export const updateUserService = async (username: string, firstName: string, lastName: string, age: number, phone: string) => {
+export const updateUserService = async (id: string, firstName: string, lastName: string, age: number, phone: string) => {
     try {
         const user = await prisma.user.findUnique({
-            where: { username: username }
+            where: { username: id }
         });
 
         if (!user) {
@@ -101,7 +100,7 @@ export const updateUserService = async (username: string, firstName: string, las
         }
 
         await prisma.user.update({
-            where: { username: username },
+            where: { username: id},
             data: {
                 firstName: firstName || user.firstName,
                 lastName: lastName || user.lastName,

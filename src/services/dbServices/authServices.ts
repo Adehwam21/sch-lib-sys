@@ -19,14 +19,14 @@ export const resgistrationService = async (firstName: string, lastName: string, 
             firstName: firstName,
             lastName: lastName,
             username: username,
-            age: age,
+            age: Number(age),
             hashedPassword: hash,
             email: email,
             phone: phone
         }
     });
     console.log(`${username} registered`);
-    return {code: 200, data:"Sign up successful"};
+    return {code: 201, data:"Sign up successful"};
     };
 };
 
@@ -43,7 +43,7 @@ export const loginService = async (username:string, password:string) => {
     // Check if passwords match
     const match = await comparePassword(password, user?.hashedPassword);
     if (match) {
-        console.log(`${user?.username} logged in }`)
+        console.log(`${user?.username} logged in`)
         return {code: 200, data: "Login successful"};
     } else {
         console.log("Invalid password")
