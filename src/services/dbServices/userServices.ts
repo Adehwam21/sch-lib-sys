@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prismas";
+import { converStringToRoleType } from 'utils/userUtils';
 
 // GET ALL USERS 
 export const getAllUsersService = async () => {
@@ -68,8 +69,9 @@ export const getUserByMailService = async (email: string) => {
 };
 
 // GET USER BY ROLE
-export const getUserByRoleService = async (role: string) => {
+export const getUserByRoleService = async (role: any) => {
     try {
+        const userRole = converStringToRoleType(role)
         const users = await prisma.user.findMany({
             where: { role: role },
         });

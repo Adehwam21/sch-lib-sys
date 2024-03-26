@@ -1,5 +1,5 @@
 import { UpdateUser } from 'dto/userRelatedDto';
-import {Request, Response} from 'express'
+import {Request, Response} from 'express';
 import { 
     getAllUsersService, 
     getUserByIdService, 
@@ -60,9 +60,8 @@ export const getUserByMail = async (req: Request, res: Response) => {
 /*=========================== Find users by role ======================================*/
 export const getUserByRole = async (req: Request, res: Response) => {
     const { role } = req.query;
-    
     try {
-        const { code, data } = await getUserByRoleService(role as string);
+        const { code, data } = await getUserByRoleService(role);
         return res.status(code).json(data);
     } catch (error) {
         console.error("Error fetching user details:", error);
