@@ -105,7 +105,7 @@ export const getAllBookCopies = async (req: Request, res: Response): Promise<Res
 export const getBookCopyByCode = async (req: Request, res: Response): Promise<Response> => {
     const { copyCode } = req.params;
     try {
-        const {code, data} = await getBookCopyByCodeService(copyCode);
+        const {code, data} = await getBookCopyByCodeService(parseInt(copyCode));
         return res.status(code).json({ data: data });
     } catch (error) {
         console.error("Error fetching book copy by code:", error);
@@ -117,7 +117,7 @@ export const getBookCopyByCode = async (req: Request, res: Response): Promise<Re
 export const deleteBookCopy = async (req: Request, res: Response): Promise<Response> => {
     const { copyCode } = req.params;
     try {
-        const {code, data}= await deleteBookCopyByCodeService(copyCode);
+        const {code, data}= await deleteBookCopyByCodeService(parseInt(copyCode));
         return res.status(code).json({ data: data });
     } catch (error) {
         console.error("Error deleting book copy:", error);

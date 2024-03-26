@@ -1,7 +1,15 @@
-import { CreateAuthor } from "dto/authorRelatedDto";
-import { prisma } from "../db/prismas";
 import { Request, Response } from "express";
-import { addAuthorService, deleteAuthorService, getAllAuthorsService, getAuthorByEmailService, getAuthorByFirstNameService, getAuthorByIdService, getAuthorByLastNameService, updateAuthorService } from "services/dbServices/authorServices";
+
+import { 
+    addAuthorService,
+    deleteAuthorService, 
+    getAllAuthorsService,
+    getAuthorByEmailService,
+    getAuthorByFirstNameService,
+    getAuthorByIdService,
+    getAuthorByLastNameService,
+    updateAuthorService
+} from "../services/dbServices/authorServices";
 
 /*=========================== Add Author ===========================================*/
 export const addAuthor = async (req: Request, res: Response) => {

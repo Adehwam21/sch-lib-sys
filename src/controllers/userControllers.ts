@@ -6,7 +6,8 @@ import {
     getUserByUsernameService, 
     getUserByMailService, 
     getUserByRoleService, 
-    updateUserService 
+    updateUserService,
+    deleteUserService
 } from '../services/dbServices/userServices';
 
 /*=========================== Get all Users ======================================*/
@@ -83,3 +84,14 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 };
 
+/*=========================== Delete User info ======================================*/
+export const deleteUser = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    try {
+        const {code, data } = await deleteUserService(id);
+        return res.status(code).json({data: data});
+    } catch (error) {
+        console.log('Error updating User', error);
+        return res.status(500).json({data: "Internal server error"});
+    }
+}

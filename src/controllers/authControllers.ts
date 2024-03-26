@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
 import { Register, Login } from 'dto/authDto';
-import { loginService, resgistrationService } from 'services/dbServices/authServices';
+import { loginService, resgistrationService } from '../services/dbServices/authServices';
 
 /* ========================================User registration======================================== */
-export const register = async (req: Request, res: Response) :Promise<Response>=> {
+export const register = async (req: Request, res: Response) => {
     const { firstName, lastName, age, username, password, email, phone }: Register = req.body;
     try {
         const info = await resgistrationService(firstName, lastName, age, username, password, email, phone)
@@ -15,7 +15,7 @@ export const register = async (req: Request, res: Response) :Promise<Response>=>
 };
 
 /* ========================================User login============================================== */
-export const login = async (req: Request, res: Response) :Promise<Response>=> {
+export const login = async (req: Request, res: Response) => {
     const { username, password }:Login = req.body;
     try {
         const info = await loginService(username, password)
