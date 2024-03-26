@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 
@@ -25,6 +26,7 @@ app.get("/", async(req: Request, res: Response) => {
     }
 });
 
+app.use(userRoutes);
 app.use(authRoutes);
 app.use(authorRoutes);
 app.use(bookRoutes);
