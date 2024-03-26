@@ -1,6 +1,5 @@
 require('dotenv').config();
 const cors = require('cors');
-import { editAuthor } from 'controllers/authorControllers';
 import express from 'express';
 import {Request, Response, NextFunction} from 'express';
 
