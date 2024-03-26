@@ -87,10 +87,10 @@ export const getUserByRoleService = async (role: string) => {
 };
 
 // UPDATE USER
-export const updateUserService = async (userId: string, firstName: string, lastName: string, age: number, phone: string) => {
+export const updateUserService = async (username: string, firstName: string, lastName: string, age: number, phone: string) => {
     try {
         const user = await prisma.user.findUnique({
-            where: { id: userId }
+            where: { username: username }
         });
 
         if (!user) {
@@ -99,7 +99,7 @@ export const updateUserService = async (userId: string, firstName: string, lastN
         }
 
         await prisma.user.update({
-            where: { id: userId },
+            where: { username: username },
             data: {
                 firstName: firstName || user.firstName,
                 lastName: lastName || user.lastName,
@@ -114,4 +114,27 @@ export const updateUserService = async (userId: string, firstName: string, lastN
         console.error("Error updating User", error);
         return { code: 500, data: "Internal server error" };
     }
+};
+
+// DELETE USER
+export const deleteUserService = async (id: string) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: id }
+        });
+
+        if (!user) {
+            console.log("User does not exist");
+            return { code: 404, data: "User not found" };
+        } else {
+            await prisma.user.delete({
+                where: { id: id}
+            })
+            console.log('User deleted');
+            return {code: 200, data: "User deletedd"};
+        }
+    }catch (error) {
+        console.error('Error deleting User', error);
+        return {code: 500, data: "Internal server error"};
+    };
 };

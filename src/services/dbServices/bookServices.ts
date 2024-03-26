@@ -134,7 +134,7 @@ export const getAllBookCopiesService = async () => {
 };
 
 // GET COPY BY COPY CODE
-export const getBookCopyByCodeService = async (copyCode: string) => {
+export const getBookCopyByCodeService = async (copyCode: number) => {
     try {
         const bookCopy = await prisma.bookCopy.findUnique({
             where: { copyCode: copyCode }
@@ -148,7 +148,7 @@ export const getBookCopyByCodeService = async (copyCode: string) => {
 //Add update book copy later
 
 // DELETE BOOK COPY
-export const deleteBookCopyByCodeService = async (copyCode: string) => {
+export const deleteBookCopyByCodeService = async (copyCode: number) => {
     try {
         const deletedBookCopy = await prisma.bookCopy.delete({
             where: { copyCode: copyCode }

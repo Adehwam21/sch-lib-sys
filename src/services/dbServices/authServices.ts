@@ -1,5 +1,5 @@
 import {prisma} from "../../db/prismas"
-import { hashPassword, comparePassword } from "utils/authenticate";
+import { hashPassword, comparePassword } from "../../utils/authenticate";
 
 
 // REGISTRATION 
@@ -13,7 +13,7 @@ export const resgistrationService = async (firstName: string, lastName: string, 
         return {code: 401, data: "User already exists"}
     } else {
         // If user does not exist, create user object
-        const hash = hashPassword(password);
+        const hash = await hashPassword(password);
         await prisma.user.create({
         data: {
             firstName: firstName,
