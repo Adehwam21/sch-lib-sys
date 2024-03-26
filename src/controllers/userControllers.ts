@@ -14,7 +14,7 @@ import {
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const { code, data } = await getAllUsersService();
-        return res.status(code).json(data);
+        return res.status(code).json({data});
     } catch (error) {
         console.error("Error fetching all users:", error);
         return res.status(500).json({ message: "Internal server error" });
@@ -47,7 +47,7 @@ export const getUserByUsername = async (req: Request, res: Response) => {
 
 /*=========================== Find user by email ======================================*/
 export const getUserByMail = async (req: Request, res: Response) => {
-    const { email } = req.params;
+    const email = req.query.email;
     try {
         const { code, data } = await getUserByMailService(email);
         return res.status(code).json(data);
@@ -59,7 +59,7 @@ export const getUserByMail = async (req: Request, res: Response) => {
 
 /*=========================== Find users by role ======================================*/
 export const getUserByRole = async (req: Request, res: Response) => {
-    const { role } = req.query;
+    const role = req.query.role;
     try {
         const { code, data } = await getUserByRoleService(role);
         return res.status(code).json(data);
