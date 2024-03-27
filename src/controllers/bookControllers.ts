@@ -80,9 +80,9 @@ export const deleteBook = async (req: Request, res: Response): Promise<Response>
 
 /*================================== Create single copy of book ===========================================*/
 export const addBookCopy = async (req: Request, res: Response) :Promise<Response> => {
-    const { bookId, copyCode, ISBN, pages }: CreateBookCopy = req.body;
+    const { bookId, ISBN, pages }: CreateBookCopy = req.body;
     try {
-        const {code, data}= await createBookCopyService(bookId, copyCode, ISBN, pages);
+        const {code, data}= await createBookCopyService(bookId, ISBN, pages);
         return res.status(code).json({ data: data });
     } catch (error) {
         console.log("Error adding book", error);
@@ -113,7 +113,7 @@ export const getBookCopyByCode = async (req: Request, res: Response): Promise<Re
     }
 };
 
-/*=========================== Delete Book ===========================================*/
+/*=========================== Delete Book Copy===========================================*/
 export const deleteBookCopy = async (req: Request, res: Response): Promise<Response> => {
     const { copyCode } = req.params;
     try {

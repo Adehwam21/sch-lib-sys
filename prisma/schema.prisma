@@ -20,11 +20,10 @@ model Book {
 }
 
 model BookCopy {
-  copyId       String    @id @unique @default(uuid())
-  copyCode     Int       @unique
+  copyCode     Int       @id @default(autoincrement())
   book         Book      @relation(fields: [bookId], references: [id])
   bookId       String
-  ISBN         String?
+  ISBN         String    @unique
   pages        Int?
   borrowedBy   User?     @relation(fields: [borrowedById], references: [id])
   borrowedById String?

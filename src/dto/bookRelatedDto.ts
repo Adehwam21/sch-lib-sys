@@ -9,5 +9,5 @@ export interface CreateBookCopy {
     bookId: string;
     copyCode: number;
     ISBN: string;
-    pages: number;
+    pages: string;
 }

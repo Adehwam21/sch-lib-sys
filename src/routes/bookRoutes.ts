@@ -13,16 +13,16 @@ import {
 } from '../controllers/bookControllers';
 
 // Books routes
-router.post('/book', addBook );
 router.get('/books', getAllBooks);
-router.get('/books/?title', getBookByTitle);
-router.delete('/books/:id', deleteBook);
+router.post('/books/create', addBook );
+router.get('/books/book/:id', getBookByTitle);
+router.delete('books/delete-book/:id', deleteBook);
 
 
 // Book Copy routes
-router.post('/book-copy', addBookCopy );
-router.get('/books-copies', getAllBookCopies);
-router.get('/book-copy/:code', getBookCopyByCode);
-router.delete('/books/:code', deleteBookCopy);
+router.get('/books/copies', getAllBookCopies);
+router.post('/books/copy/create', addBookCopy );
+router.get('/books/copy/:code', getBookCopyByCode);
+router.delete('/books/delete-copy/:code', deleteBookCopy);
 
 module.exports = router;

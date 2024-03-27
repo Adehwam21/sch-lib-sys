@@ -22,7 +22,7 @@ export const createBookService = async (title: string, authorId: string, authorF
         }
 
         // Create the book
-        const createBook = await prisma.book.create({
+        await prisma.book.create({
             data: {
                 title: title,
                 authorFirstName: authorFirstName,
@@ -87,33 +87,33 @@ export const deleteBookByIdService = async (id: string) => {
 
 
 /* ================================== BOOK COPIES ==============================================*/
-export const createBookCopyService = async (bookId: string, copyCode: number, ISBN: string, pages: number) => {
+export const createBookCopyService = async (bookId: string, ISBN: string, pages: string) => {
     try {
-        // Verify if book exists in the database
-        const book = await prisma.book.findUnique({
-            where: { id: bookId }
-        });
-
-        if (!book) {
-            throw new Error("This copy does not refer to any book");
-        }
-
         // Verify if a copy of the book already exists
         const existingBookCopy = await prisma.bookCopy.findUnique({
-            where: { copyCode: copyCode }
+            where: { ISBN: ISBN }
         });
 
         if (existingBookCopy) {
             throw new Error("This copy already exists");
         }
 
+        // Verify if book exists in the database
+        const book = await prisma.book.findUnique({
+            where: { id: bookId},
+        });
+
+        if (!book) {
+            throw new Error("This copy does not refer to any book");
+        }
+        let convertPages = parseInt(pages)
+
         // Create the book copy
-        const createBookCopy = await prisma.bookCopy.create({
+        await prisma.bookCopy.create({
             data: {
-                copyCode: copyCode,
                 bookId: bookId,
                 ISBN: ISBN,
-                pages: pages
+                pages: convertPages
             }
         });
 
