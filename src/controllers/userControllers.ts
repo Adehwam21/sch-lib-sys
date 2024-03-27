@@ -23,9 +23,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 /*=========================== Find user by UserId ======================================*/
 export const getUserById = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const { id } = req.params;
     try {
-        const { code, data } = await getUserByIdService(userId);
+        const { code, data } = await getUserByIdService(id);
         return res.status(code).json(data);
     } catch (error) {
         console.error("Error fetching user details:", error);
@@ -36,6 +36,7 @@ export const getUserById = async (req: Request, res: Response) => {
 /*=========================== Find user by username ======================================*/
 export const getUserByUsername = async (req: Request, res: Response) => {
     const { username } = req.params;
+    console.log(username);
     try {
         const { code, data } = await getUserByUsernameService(username);
         return res.status(code).json(data);

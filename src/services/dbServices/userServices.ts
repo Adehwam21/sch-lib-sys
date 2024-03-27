@@ -12,10 +12,10 @@ export const getAllUsersService = async () => {
     }
 };
 // GET USER BY ID
-export const getUserByIdService = async (userId: string) => {
+export const getUserByIdService = async (id: string) => {
     try {
-        const user = await prisma.user.findFirst({
-            where: { id: userId },
+        const user = await prisma.user.findUnique({
+            where: { id: id },
         });
 
         if (!user) {
@@ -33,7 +33,7 @@ export const getUserByIdService = async (userId: string) => {
 // GET USER BY USERNAME
 export const getUserByUsernameService = async (username: string) => {
     try {
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: { username: username },
         });
 
@@ -41,7 +41,6 @@ export const getUserByUsernameService = async (username: string) => {
             console.log("User not found");
             return { code: 404, data: "User not found" };
         }
-        console.log(user)
         return { code: 200, data: user };
     } catch (error) {
         console.error("Error fetching user details:", error);
@@ -91,7 +90,7 @@ export const getUserByRoleService = async (role: any) => {
 export const updateUserService = async (id: string, firstName: string, lastName: string, age: number, phone: string) => {
     try {
         const user = await prisma.user.findUnique({
-            where: { username: id }
+            where: { id: id }
         });
 
         if (!user) {
@@ -100,7 +99,7 @@ export const updateUserService = async (id: string, firstName: string, lastName:
         }
 
         await prisma.user.update({
-            where: { username: id},
+            where: { id: id},
             data: {
                 firstName: firstName || user.firstName,
                 lastName: lastName || user.lastName,
