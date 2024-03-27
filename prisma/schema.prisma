@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Book {
-  id              String     @id @default(uuid())
+  id              String     @id @unique @default(uuid())
   title           String     @unique
   authorFirstName String?
   authorLastName  String?
@@ -20,7 +20,7 @@ model Book {
 }
 
 model BookCopy {
-  copyId       String    @id @default(uuid())
+  copyId       String    @id @unique @default(uuid())
   copyCode     Int       @unique
   book         Book      @relation(fields: [bookId], references: [id])
   bookId       String
@@ -36,7 +36,7 @@ model BookCopy {
 }
 
 model Author {
-  id        String @id @default(uuid())
+  id        String @id @unique @default(uuid())
   firstName String
   lastName  String
   email     String @unique
@@ -46,7 +46,7 @@ model Author {
 }
 
 model User {
-  id             String     @id @default(uuid())
+  id             String     @id @unique @default(uuid())
   firstName      String
   lastName       String
   age            Int
