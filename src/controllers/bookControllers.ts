@@ -9,14 +9,15 @@ import {
     getBookByTitleService,
     createBookCopyService,
     getBookCopyByCodeService, 
-    deleteBookCopyByCodeService
+    deleteBookCopyByCodeService,
+    deleteBookByIdService
 } from "../services/dbServices/bookServices"
 
 /*================================== Create single book ===========================================*/
 export const addBook = async (req: Request, res: Response) :Promise<Response>=> {
-    const { title, authorId, authorFirstName, authorLastName }: CreateBook = req.body;
+    const { title, authorId, authorFirstName, authorLastName, isbn }: CreateBook = req.body;
     try {
-        const {code, data}= await createBookService(title, authorId, authorFirstName, authorLastName);
+        const {code, data}= await createBookService(title, authorId, authorFirstName, authorLastName, isbn);
         return res.status(code).json({ data: data });
     } catch (error) {
         console.log("Error adding book", error);
@@ -49,9 +50,9 @@ export const getBookById = async (req: Request, res: Response): Promise<Response
 
 /*=========================== Find Book by Title ===========================================*/
 export const getBookByTitle = async (req: Request, res: Response): Promise<Response> => {
-    const { title } = req.params;
+    const title = req.query.title;
     try {
-        const {code, data} = await getBookByTitleService(title);
+        const {code, data} = await getBookByTitleService(String(title));
         return res.status(code).json({ data: data });
     } catch (error) {
         console.error("Error fetching book copy by code:", error);
@@ -60,19 +61,15 @@ export const getBookByTitle = async (req: Request, res: Response): Promise<Respo
 };
 
 /*=========================== Delete Book ===========================================*/
-export const deleteBook = async (req: Request, res: Response): Promise<Response> => {
-    const {id} = req.params;
+export const deleteBookByID = async (req: Request, res: Response): Promise<Response> => {
+    const {id} = req.params
+    
     try {
-        const book = await prisma.book.delete({
-            where: { id: id }
-        });
-        if (!book) {
-            return res.status(404).json({ message: "Book does not exist" });
-        }
-        return res.status(200).json({ message: "Book deleted successfully"});
+        const {code, data} = await deleteBookByIdService(id);
+        return res.status(code).json({data: data});
     } catch (error) {
-        console.error("Error fetching author by id:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.log("Error adding book", error);
+        return res.status(500).json({ data: "Internal server error" });
     }
 };
 
@@ -103,9 +100,10 @@ export const getAllBookCopies = async (req: Request, res: Response): Promise<Res
 
 /*=========================== Find Book by Code ===========================================*/
 export const getBookCopyByCode = async (req: Request, res: Response): Promise<Response> => {
-    const { copyCode } = req.params;
+    let { copyCode } = req.params;
     try {
-        const {code, data} = await getBookCopyByCodeService(parseInt(copyCode));
+        const copycode = parseInt(copyCode)
+        const {code, data} = await getBookCopyByCodeService(copycode);
         return res.status(code).json({ data: data });
     } catch (error) {
         console.error("Error fetching book copy by code:", error);

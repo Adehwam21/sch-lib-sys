@@ -4,10 +4,11 @@ const router = express.Router();
 import {
     addBook, 
     addBookCopy, 
-    deleteBook, 
+    deleteBookByID, 
     deleteBookCopy, 
     getAllBookCopies, 
     getAllBooks, 
+    getBookById, 
     getBookByTitle, 
     getBookCopyByCode
 } from '../controllers/bookControllers';
@@ -15,14 +16,15 @@ import {
 // Books routes
 router.post('/books/create', addBook );
 router.get('/books', getAllBooks);
-router.get('/books/book/:id', getBookByTitle);
-router.delete('books/delete-book/:id', deleteBook);
+router.get('/books/book/title', getBookByTitle);
+router.get('/books/book/:id', getBookById);
+router.delete('/books/delete/:id', deleteBookByID);
 
 
 // Book Copy routes
 router.post('/books/copy/create', addBookCopy );
 router.get('/books/copies', getAllBookCopies);
-router.get('/books/copy/:code', getBookCopyByCode);
-router.delete('/books/delete-copy/:code', deleteBookCopy);
+router.get('/books/copy/:copyCode', getBookCopyByCode);
+router.delete('/books/copy/delete/:copyCode', deleteBookCopy);
 
 module.exports = router;

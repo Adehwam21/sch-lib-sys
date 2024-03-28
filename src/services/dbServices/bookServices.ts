@@ -1,7 +1,7 @@
 import { prisma } from "../../db/prismas";
 
 //  CREATE BOOK
-export const createBookService = async (title: string, authorId: string, authorFirstName: string, authorLastName: string) => {
+export const createBookService = async (title: string, authorId: string, authorFirstName: string, authorLastName: string, isbn: string) => {
     try {
         // Verify if author data exists in the database.
         const author = await prisma.author.findUnique({
@@ -14,11 +14,17 @@ export const createBookService = async (title: string, authorId: string, authorF
 
         // Verify if book exists in the database.
         const existingBook = await prisma.book.findUnique({
-            where: { title: title }
+            where: {
+                 title: title,
+                }
         });
 
-        if (existingBook) {
-            return {code: 401, data: "Book already exists"};
+        let isISBN = existingBook?.ISBN === isbn;
+        if (existingBook ) {
+            return {code: 401, data: "This Book already exists"};
+        }
+        if (isISBN) {
+            return {code: 401, data: "This Book version already exists"};
         }
 
         // Create the book
@@ -27,7 +33,8 @@ export const createBookService = async (title: string, authorId: string, authorF
                 title: title,
                 authorFirstName: authorFirstName,
                 authorLastName: authorLastName,
-                authorId: authorId
+                authorId: authorId,
+                ISBN: isbn
             }
         });
 
@@ -53,17 +60,21 @@ export const getBookByIdService = async (id: string) => {
         const book = await prisma.book.findUnique({
             where: { id: id }
         });
+
+        if (!book) {
+            return {code: 400, data: "Book does not exist"}
+        };
         return {code: 200, data: book};
     } catch (error) {
-        throw new Error("Error fetching book by id: " + error);
-    }
+        return {code: 500, data: "Internal server error"};
+    };
 };
 
 // GET BOOK BY TITLE
 export const getBookByTitleService = async (title: string) => {
     try {
         const book = await prisma.book.findUnique({
-            where: { title: title }
+            where: { title: String(title) }
         });
         return {code: 200, data: book};
     } catch (error) {
@@ -76,12 +87,24 @@ export const getBookByTitleService = async (title: string) => {
 // DELETE BOOK BY ID
 export const deleteBookByIdService = async (id: string) => {
     try {
-        const book = await prisma.book.delete({
+        //  Check if book exists
+        const book = await prisma.book.findUnique({
+            where: {id: id}
+        })
+
+        if (!book) {
+            return { code: 404, data: "Book does not exist" };
+        }
+        // Delete the book along with records of its copies
+        await prisma.book.delete({
             where: { id: id }
         });
-        return {code: 200, data: book};
+        await prisma.bookCopy.deleteMany({
+            where: {bookId: id}
+        })
+        return {code: 200, data: "Book deleted successfully along with its copies."};
     } catch (error) {
-        throw new Error("Error deleting book: " + error);
+        throw new Error("Error deleting books and copies:" + error);   
     }
 };
 
@@ -89,24 +112,18 @@ export const deleteBookByIdService = async (id: string) => {
 /* ================================== BOOK COPIES ==============================================*/
 export const createBookCopyService = async (bookId: string, ISBN: string, pages: string) => {
     try {
-        // Verify if a copy of the book already exists
-        const existingBookCopy = await prisma.bookCopy.findUnique({
-            where: { ISBN: ISBN }
-        });
-
-        if (existingBookCopy) {
-            throw new Error("This copy already exists");
-        }
 
         // Verify if book exists in the database
         const book = await prisma.book.findUnique({
-            where: { id: bookId},
+            where: { 
+                id: bookId,
+                ISBN: ISBN
+            },
         });
 
         if (!book) {
-            throw new Error("This copy does not refer to any book");
-        }
-
+            return {code: 401, data: "This copy does not refer to any book in the system, "};
+        } else if (book) {
         // Create the book copy
         await prisma.bookCopy.create({
             data: {
@@ -115,6 +132,7 @@ export const createBookCopyService = async (bookId: string, ISBN: string, pages:
                 pages: Number(pages)
             }
         });
+    }
 
         return {code: 201, data: 'Copy created successfully'};
     } catch (error) {
@@ -149,10 +167,15 @@ export const getBookCopyByCodeService = async (copyCode: number) => {
 // DELETE BOOK COPY
 export const deleteBookCopyByCodeService = async (copyCode: number) => {
     try {
-        const deletedBookCopy = await prisma.bookCopy.delete({
+        const bookcopy = await prisma.bookCopy.delete({
             where: { copyCode: copyCode }
         });
-        return {code: 200, data: deletedBookCopy}
+
+        if (!bookcopy) {
+            return {code: 404, data: "Copy not found"};
+        }
+
+        return {code: 200, data: "Copy deleted."}
     } catch (error) {
         throw new Error("Error deleting book copy: " + error);
     }

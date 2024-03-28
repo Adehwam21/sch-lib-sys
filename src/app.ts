@@ -32,5 +32,5 @@ app.use(authorRoutes);
 app.use(bookRoutes);
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}/`)
+    console.log(`🚀 Server running on http://localhost:${PORT}`)
 });

@@ -3,6 +3,7 @@ export interface CreateBook {
     authorId: string;
     authorFirstName: string;
     authorLastName: string;
+    isbn: string
 }
 
 export interface CreateBookCopy {
