@@ -14,16 +14,17 @@ model Book {
   authorLastName  String?
   author          Author     @relation(fields: [authorId], references: [id])
   authorId        String
+  ISBN            String?    @unique
   copies          BookCopy[]
 
   @@index([title])
 }
 
 model BookCopy {
-  copyCode     Int       @id @default(autoincrement())
-  book         Book      @relation(fields: [bookId], references: [id])
+  copyCode     Int       @id @unique @default(autoincrement())
+  book         Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
   bookId       String
-  ISBN         String    @unique
+  ISBN         String
   pages        Int?
   borrowedBy   User?     @relation(fields: [borrowedById], references: [id])
   borrowedById String?
