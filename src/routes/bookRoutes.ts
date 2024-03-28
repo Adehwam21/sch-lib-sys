@@ -13,15 +13,15 @@ import {
 } from '../controllers/bookControllers';
 
 // Books routes
-router.get('/books', getAllBooks);
 router.post('/books/create', addBook );
+router.get('/books', getAllBooks);
 router.get('/books/book/:id', getBookByTitle);
 router.delete('books/delete-book/:id', deleteBook);
 
 
 // Book Copy routes
-router.get('/books/copies', getAllBookCopies);
 router.post('/books/copy/create', addBookCopy );
+router.get('/books/copies', getAllBookCopies);
 router.get('/books/copy/:code', getBookCopyByCode);
 router.delete('/books/delete-copy/:code', deleteBookCopy);
 

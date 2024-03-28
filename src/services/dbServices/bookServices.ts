@@ -106,14 +106,13 @@ export const createBookCopyService = async (bookId: string, ISBN: string, pages:
         if (!book) {
             throw new Error("This copy does not refer to any book");
         }
-        let convertPages = parseInt(pages)
 
         // Create the book copy
         await prisma.bookCopy.create({
             data: {
                 bookId: bookId,
                 ISBN: ISBN,
-                pages: convertPages
+                pages: Number(pages)
             }
         });
 
